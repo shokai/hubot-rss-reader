@@ -1,0 +1,25 @@
+{
+  "name": "hubot-rss-reader",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Hubot RSS Reader",
+  "main": "scripts/hubot-rss-reader.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hubot",
+    "rss",
+    "feed"
+  ],
+  "author": "Sho Hashimoto <hashimoto@shokai.org>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/shokai/hubot-rss-reader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shokai/hubot-rss-reader/issues"
+  },
+  "homepage": "https://github.com/shokai/hubot-rss-reader"
+}
