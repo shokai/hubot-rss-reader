@@ -54,7 +54,7 @@ module.exports = (robot) ->
           robot.send {room: room}, "#{article.title}\n#{article.link}"
   , 3000
 
-  robot.respond /rss add (https?:\/\/[^\s]+)/i, (msg) ->
+  robot.respond /rss add (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
     feeds = getFeeds msg.message.room
     if _.contains feeds, url
@@ -69,7 +69,7 @@ module.exports = (robot) ->
       msg.send "#{article.title}\n#{article.link}"
     msg.send "registered #{url}"
 
-  robot.respond /rss delete (https?:\/\/[^\s]+)/i, (msg) ->
+  robot.respond /rss delete (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
     feeds = getFeeds msg.message.room
     unless _.contains feeds, url
