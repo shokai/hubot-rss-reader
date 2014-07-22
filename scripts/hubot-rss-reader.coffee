@@ -54,8 +54,8 @@ module.exports = (robot) ->
           robot.send {room: room}, "#{article.title}\n#{article.link}"
   , 3000
 
-  robot.respond /rss add (https?:\/\/[^\s]+)/im, (msg) ->
-    url = msg.match[1].trim()
+  robot.respond /rss (add|register) (https?:\/\/[^\s]+)/im, (msg) ->
+    url = msg.match[2].trim()
     feeds = getFeeds msg.message.room
     if _.contains feeds, url
       msg.send "#{url} is already registered"

@@ -34,11 +34,6 @@ Usage
     # or
     hubot rss register https://github.com/shokai.atom
 
-    # register multiple Feeds separate with line-break
-    hubot rss add https://github.com/shokai.atom\n
-    http://shokai.org/blog/feed\n
-    http://b.hatena.ne.jp/shokai/rss
-    
 
 ### delete
 
