@@ -1,5 +1,5 @@
-[WIP] Hubot RSS Reader
-======================
+Hubot RSS Reader
+================
 RSS Reader for each Chat Channels, works with Hubot.
 
 - https://github.com/shokai/hubot-rss-reader
@@ -14,7 +14,7 @@ Requirements
 Install
 -------
 
-    % npm install hubot-rss-reader
+    % npm install hubot-rss-reader -save
 
 
 ### edit `external-script.json`
