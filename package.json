@@ -24,6 +24,7 @@
   "homepage": "https://github.com/shokai/hubot-rss-reader",
   "dependencies": {
     "hubot-scripts": "*",
-    "lodash": "*"
+    "lodash": "*",
+    "rss-watcher": "^1.0.7"
   }
 }
