@@ -25,6 +25,6 @@
   "dependencies": {
     "hubot-scripts": "*",
     "lodash": "*",
-    "rss-watcher": "^1.0.7"
+    "rss-watcher": "^1.2.0"
   }
 }

@@ -20,16 +20,19 @@ watchers = new class Watchers
   constructor: ->
     @watchers = {}
 
-  watch: (url) ->
+  watch: (url, callback = ->) ->
     return @watchers[url] ||= (
       w = new RSSWatcher(url)
-      w.run()
+      w.run callback
       w
     )
 
   stop: (url) ->
     if w = @watchers[url]
-      w.stop()
+      try
+        w.stop()
+      catch err
+        err
 
 
 module.exports = (robot) ->
@@ -54,6 +57,7 @@ module.exports = (robot) ->
           robot.send {room: room}, "#{article.title}\n#{article.link}"
   , 3000
 
+
   robot.respond /rss (add|register) (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[2].trim()
     feeds = getFeeds msg.message.room
@@ -62,12 +66,20 @@ module.exports = (robot) ->
       return
     feeds.push url
     setFeeds msg.message.room, feeds.sort()
-    watcher = watchers.watch(url)
+
+    watcher = watchers.watch url, (err, articles) ->
+      if err
+        msg.send err
+        return
+      for article in articles
+        msg.send "#{article.title}\n#{article.link}"
+
     watcher.on 'error', (err) ->
       msg.send err
     watcher.on 'new article', (article) ->
       msg.send "#{article.title}\n#{article.link}"
     msg.send "registered #{url}"
+
 
   robot.respond /rss delete (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
@@ -79,6 +91,7 @@ module.exports = (robot) ->
     setFeeds msg.message.room, feeds
     watchers.stop url
     msg.send "deleted #{url}"
+
 
   robot.respond /rss list/i, (msg) ->
     feeds = getFeeds msg.message.room
