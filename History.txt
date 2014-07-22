@@ -1,3 +1,9 @@
+=== 0.0.2 2014-07-22
+
+* hubot rss (register|add) URL
+* add/delete multiple feeds  #2
+
+
 === 0.0.1 2014-07-22
 
 * first release
