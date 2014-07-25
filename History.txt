@@ -1,3 +1,7 @@
+=== 0.1.2 2014-07-26
+
+* modify interval of each feeds 1sec -> 5sec
+
 === 0.1.1 2014-07-26
 
 * bugfix sending room
