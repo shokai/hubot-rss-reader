@@ -5,7 +5,7 @@
   "description": "Hubot RSS Reader",
   "main": "scripts/hubot-rss-reader.coffee",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt test"
   },
   "keywords": [
     "hubot",
@@ -29,5 +29,17 @@
     "hubot-scripts": "*",
     "lodash": "*",
     "request": "*"
+  },
+  "devDependencies": {
+    "coffee-errors": "*",
+    "coffee-script": "^1.7.1",
+    "mocha": "^1.21.0",
+    "grunt": "*",
+    "grunt-cli": "*",
+    "grunt-simple-mocha": "*",
+    "grunt-notify": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-coffeelint": "git+https://github.com/geta6/grunt-coffeelint",
+    "grunt-contrib-watch": "git+https://github.com/gruntjs/grunt-contrib-watch"
   }
 }

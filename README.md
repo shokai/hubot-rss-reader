@@ -48,3 +48,13 @@ Usage
 ### list
 
     hubot rss list
+
+
+Test
+----
+
+    % npm install
+
+    % grunt
+    # or
+    % npm test
