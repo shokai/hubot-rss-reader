@@ -1,3 +1,9 @@
+=== 0.1.0 2014-07-26
+
+* remove rss-watcher, use feedparser and request
+* add tests
+
+
 === 0.0.3 2014-07-23
 
 * update for rss-watcher v1.2.0
