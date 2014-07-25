@@ -2,6 +2,8 @@ Hubot RSS Reader
 ================
 RSS Reader for each Chat Channels, works with Hubot.
 
+[![Build Status](https://travis-ci.org/shokai/hubot-rss-reader.svg?branch=master)](https://travis-ci.org/shokai/hubot-rss-reader)
+
 - https://github.com/shokai/hubot-rss-reader
 - https://www.npmjs.org/package/hubot-rss-reader
 
