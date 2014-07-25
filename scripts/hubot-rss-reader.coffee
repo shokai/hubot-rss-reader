@@ -40,13 +40,13 @@ module.exports = (robot) ->
   checker.on 'new entry', (entry) ->
     for room, feeds of robot.brain.get('feeds')
       if _.include feeds, entry.feed
-        robot.send room, "#{entry.title}\n#{entry.url}"
+        robot.send {room: room}, "#{entry.title}\n#{entry.url}"
 
   checker.on 'error', (err) ->
     debug err
     for room, feeds of robot.brain.get('feeds')
       if _.include feeds, err.feed
-        robot.send room, "[ERROR] #{err.feed} - #{err.error.message}"
+        robot.send {room: room}, "[ERROR] #{err.feed} - #{err.error.message}"
 
   robot.respond /rss (add|register) (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[2].trim()

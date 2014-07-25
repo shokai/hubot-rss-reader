@@ -34,7 +34,7 @@ describe 'RSSChecker', ->
     it 'should not emit the event "new entry" if already crawled', (done) ->
 
       @timeout 5000
-  
+
       checker.on 'new entry', (entry) ->
         assert.ok false
 
