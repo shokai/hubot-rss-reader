@@ -1,3 +1,7 @@
+=== 0.1.4 2014-07-26
+
+* bugfix "new entry" detection
+
 === 0.1.3 2014-07-26
 
 * use robot.messageRoom(room, text)
