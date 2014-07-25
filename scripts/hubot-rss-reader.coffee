@@ -37,6 +37,10 @@ watchers = new class Watchers
 
 module.exports = (robot) ->
 
+  if process.env.NODE_ENV is 'development'
+    robot.error (err, msg) ->
+      robot.logger.error err
+
   getFeeds = (room) ->
     robot.brain.get('feeds')?[room] or []
 
