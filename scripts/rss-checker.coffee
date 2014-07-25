@@ -66,7 +66,7 @@ module.exports = class RSSChecker extends events.EventEmitter
             @emit 'error', {error: err, feed: url}
           setTimeout ->
             next()
-          , 1000
+          , 5000
     , callback
 
   getFeeds: (room) ->
