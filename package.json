@@ -23,8 +23,11 @@
   },
   "homepage": "https://github.com/shokai/hubot-rss-reader",
   "dependencies": {
+    "async": "*",
+    "debug": "*",
+    "feedparser": "*",
     "hubot-scripts": "*",
     "lodash": "*",
-    "rss-watcher": "^1.2.0"
+    "request": "*"
   }
 }

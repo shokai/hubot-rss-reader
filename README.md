@@ -24,6 +24,11 @@ Install
 ["hubot-rss-reader"]
 ```
 
+### Configure (ENV var)
+
+export HUBOT_RSS_INTERVAL=600  # 600 sec (default)
+export DEBUG=hubot-rss-reader  # debug print
+
 
 Usage
 -----

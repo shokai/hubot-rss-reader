@@ -2,8 +2,10 @@
 #   Hubot RSS Reader
 #
 # Dependencies
-#   "lodash":      "*"
-#   "rss-watcher": "*"
+#   "async":      "*"
+#   "feedparser": "*"
+#   "lodash":     "*"
+#   "request":    "*"
 #
 # Commands:
 #   hubot rss add https://github.com/shokai.atom
@@ -13,92 +15,63 @@
 # Author:
 #   @shokai
 
-_ = require 'lodash'
-RSSWatcher = require 'rss-watcher'
+path       = require 'path'
+_          = require 'lodash'
+debug      = require('debug')('hubot-rss-reader')
+RSSChecker = require path.join __dirname, 'rss-checker'
 
-watchers = new class Watchers
-  constructor: ->
-    @watchers = {}
-
-  watch: (url, callback = ->) ->
-    return @watchers[url] ||= (
-      w = new RSSWatcher(url)
-      w.run callback
-      w
-    )
-
-  stop: (url) ->
-    if w = @watchers[url]
-      try
-        w.stop()
-      catch err
-        err
-
+## config
+process.env.HUBOT_RSS_INTERVAL ||= 60*10  # 10 minutes
 
 module.exports = (robot) ->
 
-  if process.env.NODE_ENV is 'development'
-    robot.error (err, msg) ->
-      robot.logger.error err
+  checker = new RSSChecker robot
 
-  getFeeds = (room) ->
-    robot.brain.get('feeds')?[room] or []
-
-  setFeeds = (room, urls) ->
-    return unless urls instanceof Array
-    feeds = robot.brain.get('feeds') or {}
-    feeds[room] = urls
-    robot.brain.set 'feeds', feeds
-
-  ## should run after redis connected
+  ## wait until connect redis
   setTimeout ->
-    for room, urls of robot.brain.get('feeds')
-      for url in urls
-        watcher = watchers.watch url
-        watcher.on 'error', (err) ->
-          robot.send {room: room}, err
-        watcher.on 'new article', (article) ->
-          robot.send {room: room}, "#{article.title}\n#{article.link}"
-  , 3000
+    run = (opts) ->
+      checker.check opts, ->
+        debug "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
+        setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
 
+    run {init: yes}
+  , 10000
+
+  checker.on 'new entry', (entry) ->
+    for room, feeds of robot.brain.get('feeds')
+      if _.include feeds, entry.feed
+        robot.send room, "#{entry.title}\n#{entry.url}"
+
+  checker.on 'error', (err) ->
+    debug err
+    for room, feeds of robot.brain.get('feeds')
+      if _.include feeds, err.feed
+        robot.send room, "[ERROR] #{err.feed} - #{err.error.message}"
 
   robot.respond /rss (add|register) (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[2].trim()
-    feeds = getFeeds msg.message.room
-    if _.contains feeds, url
-      msg.send "#{url} is already registered"
-      return
-    feeds.push url
-    setFeeds msg.message.room, feeds.sort()
-
-    watcher = watchers.watch url, (err, articles) ->
+    debug "add #{url}"
+    checker.addFeed msg.message.room, url, (err, res) ->
       if err
         msg.send err
         return
-      for article in articles
-        msg.send "#{article.title}\n#{article.link}"
-
-    watcher.on 'error', (err) ->
-      msg.send err
-    watcher.on 'new article', (article) ->
-      msg.send "#{article.title}\n#{article.link}"
-    msg.send "registered #{url}"
-
+      msg.send res
+      checker.fetch url, (err, entries) ->
+        if err
+          return msg.send err
+        for entry in entries
+          msg.send "#{entry.title}\n#{entry.url}"
 
   robot.respond /rss delete (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
-    feeds = getFeeds msg.message.room
-    unless _.contains feeds, url
-      msg.send "#{url} is not registered"
-      return
-    feeds.splice feeds.indexOf(url), 1
-    setFeeds msg.message.room, feeds
-    watchers.stop url
-    msg.send "deleted #{url}"
-
+    debug "delete #{url}"
+    checker.deleteFeed msg.message.room, url, (err, res) ->
+      if err
+        return msg.send err
+      msg.send res
 
   robot.respond /rss list/i, (msg) ->
-    feeds = getFeeds msg.message.room
+    feeds = checker.getFeeds msg.message.room
     if feeds.length < 1
       msg.send "nothing"
     else
