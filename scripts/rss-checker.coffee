@@ -44,8 +44,8 @@ module.exports = class RSSChecker extends events.EventEmitter
       entry = {feed: feed_url, url: chunk.link, title: chunk.title}
       debug entry
       entries.push entry
-      if @cache[chunk.link] isnt chunk.title
-        @cache[chunk.link] = chunk.title
+      unless @cache[chunk.link]
+        @cache[chunk.link] = true
         @emit 'new entry', entry unless opts.init
 
     feedparser.on 'end', ->
