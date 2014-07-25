@@ -1,3 +1,8 @@
+=== 0.1.1 2014-07-26
+
+* bugfix sending room
+* test on Travis CI
+
 === 0.1.0 2014-07-26
 
 * remove rss-watcher, use feedparser and request
