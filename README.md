@@ -7,6 +7,7 @@ RSS Reader for each Chat Channels, works with Hubot.
 - https://github.com/shokai/hubot-rss-reader
 - https://www.npmjs.org/package/hubot-rss-reader
 
+![screen shot](http://gyazo.com/234dfb14d76bb3de9efd88bfe8dc6522.png)
 
 Requirements
 ------------
