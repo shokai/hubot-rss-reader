@@ -39,7 +39,7 @@
     "grunt-simple-mocha": "*",
     "grunt-notify": "*",
     "grunt-contrib-coffee": "*",
-    "grunt-coffeelint": "git+https://github.com/geta6/grunt-coffeelint",
+    "grunt-coffeelint": "*",
     "grunt-contrib-watch": "git+https://github.com/gruntjs/grunt-contrib-watch"
   }
 }
