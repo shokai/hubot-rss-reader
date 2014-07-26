@@ -1,3 +1,7 @@
+=== 0.1.7 2014-07-26
+
+* add tests for RSSChecker#check
+
 === 0.1.6 2014-07-26
 
 * update README
