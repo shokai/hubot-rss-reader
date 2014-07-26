@@ -29,6 +29,7 @@ Install
 ### Configure (ENV var)
 
 export HUBOT_RSS_INTERVAL=600  # 600 sec (default)
+export HUBOT_RSS_HEADER=🍣      # RSS Header Emoji (default is "sushi")
 export DEBUG=hubot-rss-reader  # debug print
 
 

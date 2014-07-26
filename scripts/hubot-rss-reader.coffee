@@ -22,6 +22,7 @@ RSSChecker = require path.join __dirname, 'rss-checker'
 
 ## config
 process.env.HUBOT_RSS_INTERVAL ||= 60*10  # 10 minutes
+process.env.HUBOT_RSS_HEADER   ||= '🍣'
 
 module.exports = (robot) ->
 
@@ -41,7 +42,7 @@ module.exports = (robot) ->
     for room, feeds of robot.brain.get('feeds')
       if _.include feeds, entry.feed
         debug "#{entry.title} #{entry.url} => #{room}"
-        robot.messageRoom '#'+room, "#{entry.title}\n#{entry.url}"
+        robot.messageRoom '#'+room, "#{process.env.HUBOT_RSS_HEADER} #{entry.title}\n#{entry.url}"
 
   checker.on 'error', (err) ->
     debug err
@@ -61,7 +62,7 @@ module.exports = (robot) ->
         if err
           return msg.send err
         for entry in entries
-          msg.send "#{entry.title}\n#{entry.url}"
+          msg.send "#{process.env.HUBOT_RSS_HEADER} #{entry.title}\n#{entry.url}"
 
   robot.respond /rss delete (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
