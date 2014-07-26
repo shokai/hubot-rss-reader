@@ -54,19 +54,22 @@ module.exports = class RSSChecker extends events.EventEmitter
   check: (opts = {init: no}, callback = ->) ->
     debug "start checking all feeds"
     feeds = []
-    for room, _feeds of @robot.brain.get('feeds')
+    for room, _feeds of (opts.feeds or @robot.brain.get('feeds'))
       feeds = feeds.concat _feeds
     feeds = _.uniq feeds
+
+    interval = 1
     async.eachSeries feeds, (url, next) =>
       do (opts) =>
-        opts.url = url
-        @fetch opts, (err, entry) =>
-          if err
-            debug err
-            @emit 'error', {error: err, feed: url}
-          setTimeout ->
+        setTimeout =>
+          opts.url = url
+          @fetch opts, (err, entry) =>
+            if err
+              debug err
+              @emit 'error', {error: err, feed: url}
             next()
-          , 5000
+        , interval
+        interval = 5000
     , callback
 
   getFeeds: (room) ->
