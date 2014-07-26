@@ -13,7 +13,7 @@ describe 'RSSChecker', ->
 
   describe 'method "fetch"', ->
 
-    it 'should emit the event "new entry", and return entries Array', (done) ->
+    it 'should emit the event "new entry", and callback entries Array', (done) ->
 
       @timeout 5000
 
