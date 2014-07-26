@@ -50,7 +50,7 @@ describe 'RSSChecker', ->
 
     it 'should not emit the event "new entry" if {init: yes} option', (done) ->
 
-      @timeout 20000
+      @timeout 15000
 
       checker = new RSSChecker {}
       checker.on 'new entry', (entry) ->
@@ -67,7 +67,7 @@ describe 'RSSChecker', ->
 
     it 'should emit the event "new entry" if {init: no} option', (done) ->
 
-      @timeout 20000
+      @timeout 15000
 
       checker = new RSSChecker {}
       entries_shokai_org = []
