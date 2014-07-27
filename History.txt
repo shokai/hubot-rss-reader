@@ -1,3 +1,8 @@
+=== 0.2.0 2014-07-27
+
+* show feed title  #7
+* modify robot.respond regex
+
 === 0.1.7 2014-07-26
 
 * add tests for RSSChecker#check
