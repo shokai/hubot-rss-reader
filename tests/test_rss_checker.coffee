@@ -25,9 +25,10 @@ describe 'RSSChecker', ->
       checker.fetch 'http://shokai.org/blog/feed', (err, entries) ->
         assert.ok entries instanceof Array
         for entry in entries
-          assert typeof entry['url'], 'string'
-          assert typeof entry['title'], 'string'
-          assert typeof entry['feed'], 'string'
+          assert.equal typeof entry.url, 'string', '"url" property not exists'
+          assert.equal typeof entry.title, 'string', '"title" property not exists'
+          assert.equal typeof entry.feed?.url, 'string', '"feed.url" property not exists'
+          assert.equal typeof entry.feed?.title, 'string', '"feed.title" property not exists'
         assert.equal JSON.stringify(entries.sort()), JSON.stringify(_entries.sort())
         done()
 

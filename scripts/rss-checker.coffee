@@ -41,7 +41,14 @@ module.exports = class RSSChecker extends events.EventEmitter
 
     entries = []
     feedparser.on 'data', (chunk) =>
-      entry = {feed: feed_url, url: chunk.link, title: chunk.title}
+      entry =
+        url: chunk.link
+        title: chunk.title
+        feed:
+          url: feed_url
+          title: feedparser.meta.title
+        toString: ->
+          return "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
       debug entry
       entries.push entry
       unless @cache[chunk.link]
@@ -66,7 +73,7 @@ module.exports = class RSSChecker extends events.EventEmitter
           @fetch opts, (err, entry) =>
             if err
               debug err
-              @emit 'error', {error: err, feed: url}
+              @emit 'error', {error: err, feedUrl: url}
             next()
         , interval
         interval = 5000

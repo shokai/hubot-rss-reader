@@ -40,15 +40,15 @@ module.exports = (robot) ->
 
   checker.on 'new entry', (entry) ->
     for room, feeds of robot.brain.get('feeds')
-      if _.include feeds, entry.feed
+      if _.include feeds, entry.feed.url
         debug "#{entry.title} #{entry.url} => #{room}"
-        robot.messageRoom '#'+room, "#{process.env.HUBOT_RSS_HEADER} #{entry.title}\n#{entry.url}"
+        robot.messageRoom '#'+room, entry.toString()
 
   checker.on 'error', (err) ->
     debug err
     for room, feeds of robot.brain.get('feeds')
-      if _.include feeds, err.feed
-        robot.messageRoom '#'+room, "[ERROR] #{err.feed} - #{err.error.message}"
+      if _.include feeds, err.feed.url
+        robot.messageRoom '#'+room, "[ERROR] #{err.feed.url} - #{err.error.message}"
 
   robot.respond /rss (add|register) (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[2].trim()
@@ -62,7 +62,7 @@ module.exports = (robot) ->
         if err
           return msg.send err
         for entry in entries
-          msg.send "#{process.env.HUBOT_RSS_HEADER} #{entry.title}\n#{entry.url}"
+          msg.send entry.toString()
 
   robot.respond /rss delete (https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
