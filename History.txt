@@ -1,3 +1,7 @@
+=== 0.3.1 2014-07-27
+
+* show entry summary if it exists  #8
+
 === 0.3.0 2014-07-27
 
 * show entry summary  #8
