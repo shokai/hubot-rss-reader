@@ -44,11 +44,12 @@ module.exports = class RSSChecker extends events.EventEmitter
       entry =
         url: chunk.link
         title: chunk.title
+        summary: chunk.summary
         feed:
           url: feed_url
           title: feedparser.meta.title
         toString: ->
-          return "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
+          return "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}\n#{@summary}"
       debug entry
       entries.push entry
       unless @cache[chunk.link]

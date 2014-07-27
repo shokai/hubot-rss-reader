@@ -27,6 +27,7 @@ describe 'RSSChecker', ->
         for entry in entries
           assert.equal typeof entry.url, 'string', '"url" property not exists'
           assert.equal typeof entry.title, 'string', '"title" property not exists'
+          assert.equal typeof entry.summary, 'string', '"summary" property not exists'
           assert.equal typeof entry.feed?.url, 'string', '"feed.url" property not exists'
           assert.equal typeof entry.feed?.title, 'string', '"feed.title" property not exists'
         assert.equal JSON.stringify(entries.sort()), JSON.stringify(_entries.sort())
