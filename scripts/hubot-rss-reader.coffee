@@ -50,7 +50,7 @@ module.exports = (robot) ->
       if _.include feeds, err.feed.url
         robot.messageRoom '#'+room, "[ERROR] #{err.feed.url} - #{err.error.message}"
 
-  robot.respond /rss (add|register) (https?:\/\/[^\s]+)/im, (msg) ->
+  robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[2].trim()
     debug "add #{url}"
     checker.addFeed msg.message.room, url, (err, res) ->
@@ -64,7 +64,7 @@ module.exports = (robot) ->
         for entry in entries
           msg.send entry.toString()
 
-  robot.respond /rss delete (https?:\/\/[^\s]+)/im, (msg) ->
+  robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
     debug "delete #{url}"
     checker.deleteFeed msg.message.room, url, (err, res) ->
@@ -72,7 +72,7 @@ module.exports = (robot) ->
         return msg.send err
       msg.send res
 
-  robot.respond /rss list/i, (msg) ->
+  robot.respond /rss\s+list/i, (msg) ->
     feeds = checker.getFeeds msg.message.room
     if feeds.length < 1
       msg.send "nothing"
