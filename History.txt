@@ -1,3 +1,7 @@
+=== 0.3.2 2014-09-03
+
+* bugfix feed parse error  #9
+
 === 0.3.1 2014-07-27
 
 * show entry summary if it exists  #8
