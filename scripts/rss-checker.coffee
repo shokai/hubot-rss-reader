@@ -77,7 +77,7 @@ module.exports = class RSSChecker extends events.EventEmitter
           @fetch opts, (err, entry) =>
             if err
               debug err
-              @emit 'error', {error: err, feedUrl: url}
+              @emit 'error', {error: err, feed: {url: url}}
             next()
         , interval
         interval = 5000
