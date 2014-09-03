@@ -22,7 +22,7 @@ RSSChecker = require path.join __dirname, 'rss-checker'
 
 ## config
 process.env.HUBOT_RSS_INTERVAL ||= 60*10  # 10 minutes
-process.env.HUBOT_RSS_HEADER   ||= '🍣'
+process.env.HUBOT_RSS_HEADER   ||= ':sushi:'
 
 module.exports = (robot) ->
 
