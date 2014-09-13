@@ -38,7 +38,10 @@ module.exports = (robot) ->
     run {init: yes}
   , 10000
 
+  last_state_is_error = {}
+
   checker.on 'new entry', (entry) ->
+    last_state_is_error[entry.feed.url] = false
     for room, feeds of robot.brain.get('feeds')
       if _.include feeds, entry.feed.url
         debug "#{entry.title} #{entry.url} => #{room}"
@@ -46,12 +49,16 @@ module.exports = (robot) ->
 
   checker.on 'error', (err) ->
     debug err
+    if last_state_is_error[err.feed.url]  # reduce error notify
+      return
+    last_state_is_error[err.feed.url] = true
     for room, feeds of robot.brain.get('feeds')
       if _.include feeds, err.feed.url
         robot.messageRoom '#'+room, "[ERROR] #{err.feed.url} - #{err.error.message}"
 
   robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[2].trim()
+    last_state_is_error[url] = false
     debug "add #{url}"
     checker.addFeed msg.message.room, url, (err, res) ->
       if err
