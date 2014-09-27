@@ -1,7 +1,7 @@
 {
   "name": "hubot-rss-reader",
   "private": false,
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Hubot RSS Reader",
   "main": "scripts/hubot-rss-reader.coffee",
   "scripts": {

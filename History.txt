@@ -1,3 +1,10 @@
+=== 0.4.0 2014-09-28
+
+* use entry's description if summary not exists
+* cleanup summary if it is html  #12
+  * remove multiple linefeed in summary  #12
+  * set first "img" tag as topic image
+
 === 0.3.3 2014-09-14
 
 * reduce too many error notifications  #10
