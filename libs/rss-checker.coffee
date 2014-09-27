@@ -10,11 +10,25 @@ request    = require 'request'
 FeedParser = require 'feedparser'
 async      = require 'async'
 debug      = require('debug')('hubot-rss-reader:rss-checker')
-
+cheerio    = require 'cheerio'
 
 module.exports = class RSSChecker extends events.EventEmitter
   constructor: (@robot) ->
     @cache = {}
+
+  cleanup_summary = (html) ->
+    summary = do (html) ->
+      try
+        $ = cheerio.load html
+        if img = $('img').attr('src')
+          return img + '\n' + $.root().text()
+        return $.root().text()
+      catch
+        return html
+    lines = summary.split /[\r\n]/
+    lines = lines.map (line) -> if /^\s+$/.test line then '' else line
+    summary = lines.join '\n'
+    return summary.replace(/\n\n\n+/g, '\n\n')
 
   fetch: (feed_url_or_opts, callback = ->) ->
     if typeof feed_url_or_opts is 'string'
@@ -44,7 +58,7 @@ module.exports = class RSSChecker extends events.EventEmitter
       entry =
         url: chunk.link
         title: chunk.title
-        summary: chunk.summary
+        summary: cleanup_summary(chunk.summary or chunk.description)
         feed:
           url: feed_url
           title: feedparser.meta.title
