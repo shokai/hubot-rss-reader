@@ -18,7 +18,7 @@
 path       = require 'path'
 _          = require 'lodash'
 debug      = require('debug')('hubot-rss-reader')
-RSSChecker = require path.join __dirname, 'rss-checker'
+RSSChecker = require path.join __dirname, '../libs/rss-checker'
 
 ## config
 process.env.HUBOT_RSS_INTERVAL ||= 60*10  # 10 minutes

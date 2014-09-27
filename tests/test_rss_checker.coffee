@@ -2,7 +2,7 @@ path = require 'path'
 require path.resolve 'tests', 'test_helper'
 
 assert     = require 'assert'
-RSSChecker = require path.resolve 'scripts', 'rss-checker'
+RSSChecker = require path.resolve 'libs', 'rss-checker'
 
 checker = new RSSChecker {}
 
