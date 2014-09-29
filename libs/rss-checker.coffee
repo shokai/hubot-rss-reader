@@ -100,8 +100,11 @@ module.exports = class RSSChecker extends events.EventEmitter
         debug err
         @emit 'error', {error: err, feed: {url: url}}
 
+  getAllFeeds: ->
+    @robot.brain.get 'feeds'
+
   getFeeds: (room) ->
-    @robot.brain.get('feeds')?[room] or []
+    @getAllFeeds()?[room] or []
 
   setFeeds: (room, urls) ->
     return unless urls instanceof Array

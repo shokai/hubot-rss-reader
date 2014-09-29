@@ -45,7 +45,7 @@ module.exports = (robot) ->
 
   checker.on 'new entry', (entry) ->
     last_state_is_error[entry.feed.url] = false
-    for room, feeds of robot.brain.get('feeds')
+    for room, feeds of checker.getAllFeeds()
       if _.include feeds, entry.feed.url
         debug "#{entry.title} #{entry.url} => #{room}"
         robot.messageRoom '#'+room, entry.toString()
@@ -55,7 +55,7 @@ module.exports = (robot) ->
     if last_state_is_error[err.feed.url]  # reduce error notify
       return
     last_state_is_error[err.feed.url] = true
-    for room, feeds of robot.brain.get('feeds')
+    for room, feeds of checker.getAllFeeds()
       if _.include feeds, err.feed.url
         robot.messageRoom '#'+room, "[ERROR] #{err.feed.url} - #{err.error.message or err.error}"
 
