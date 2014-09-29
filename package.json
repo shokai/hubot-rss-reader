@@ -27,6 +27,7 @@
     "cheerio": "*",
     "debug": "*",
     "feedparser": "*",
+    "find-rss": "*",
     "hubot-scripts": "*",
     "lodash": "*",
     "request": "*"

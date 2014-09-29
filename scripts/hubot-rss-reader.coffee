@@ -18,6 +18,7 @@
 path       = require 'path'
 _          = require 'lodash'
 debug      = require('debug')('hubot-rss-reader')
+RSSFinder  = require 'find-rss'
 RSSChecker = require path.join __dirname, '../libs/rss-checker'
 
 ## config
@@ -66,10 +67,20 @@ module.exports = (robot) ->
         return
       msg.send res
       checker.fetch url, (err, entries) ->
-        if err
-          return msg.send err
-        for entry in entries
-          msg.send entry.toString()
+        unless err
+          for entry in entries
+            msg.send entry.toString()
+          return
+        msg.send err
+        if err.message is 'Not a feed'
+          checker.deleteFeed msg.message.room, url
+          RSSFinder url, (err, feeds) ->
+            return if err or feeds?.length < 1
+            msg.send _.flatten([
+              "found some Feeds from #{url}"
+              feeds.map (i) -> " * #{i.url}"
+            ]).join '\n'
+        return
 
   robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
