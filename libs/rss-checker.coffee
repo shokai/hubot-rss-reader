@@ -4,6 +4,8 @@
 # Author:
 #   @shokai
 
+'use strict'
+
 events     = require 'events'
 _          = require 'lodash'
 request    = require 'request'
@@ -32,7 +34,7 @@ module.exports = class RSSChecker extends events.EventEmitter
     return summary.replace(/\n\n\n+/g, '\n\n')
 
   fetch: (feed_url_or_opts) ->
-    return new Promise (resolve, reject) =>
+    new Promise (resolve, reject) =>
       if typeof feed_url_or_opts is 'string'
         feed_url = feed_url_or_opts
         opts = {init: no}
@@ -79,26 +81,31 @@ module.exports = class RSSChecker extends events.EventEmitter
         resolve entries
 
   check: (opts = {init: no}) ->
-    debug "start checking all feeds"
-    feeds = []
-    for room, _feeds of (opts.feeds or @robot.brain.get('feeds'))
-      feeds = feeds.concat _feeds
-    feeds = _.uniq feeds
-
-    interval = 1
-    Promise.each feeds, (url) =>
+    new Promise (resolve) =>
+      debug "start checking all feeds"
+      feeds = []
+      for room, _feeds of (opts.feeds or @robot.brain.get('feeds'))
+        feeds = feeds.concat _feeds
+      resolve _.uniq feeds
+    .then (feeds) =>
+      interval = 1
+      Promise.each feeds, (url) =>
+        new Promise (resolve) ->
+          setTimeout =>
+            resolve url
+          , interval
+          interval = 5000
+        .then (url) =>
+          do (opts) =>
+            opts.url = url
+            @fetch opts
+        .catch (err) =>
+          debug err
+          @emit 'error', {error: err, feed: {url: url}}
+    .then (feeds) ->
       new Promise (resolve) ->
-        setTimeout =>
-          resolve url
-        , interval
-        interval = 5000
-      .then (url) =>
-        do (opts) =>
-          opts.url = url
-          @fetch opts
-      .catch (err) =>
-        debug err
-        @emit 'error', {error: err, feed: {url: url}}
+        debug "check done (#{feeds?.length or 0} feeds)"
+        resolve feeds
 
   getAllFeeds: ->
     @robot.brain.get 'feeds'

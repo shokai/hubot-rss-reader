@@ -1,12 +1,6 @@
 # Description:
 #   Hubot RSS Reader
 #
-# Dependencies
-#   "async":      "*"
-#   "feedparser": "*"
-#   "lodash":     "*"
-#   "request":    "*"
-#
 # Commands:
 #   hubot rss add https://github.com/shokai.atom
 #   hubot rss delete http://shokai.org/blog/feed
@@ -14,6 +8,8 @@
 #
 # Author:
 #   @shokai
+
+'use strict'
 
 path       = require 'path'
 _          = require 'lodash'
@@ -35,6 +31,10 @@ module.exports = (robot) ->
     run = (opts) ->
       checker.check opts
       .then ->
+        debug "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
+        setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
+      , (err) ->
+        debug err
         debug "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
         setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
 
@@ -65,8 +65,11 @@ module.exports = (robot) ->
     debug "add #{url}"
     checker.addFeed msg.message.room, url
     .then (res) ->
-      msg.send res
-      return checker.fetch url
+      new Promise (resolve) ->
+        msg.send res
+        resolve url
+    .then (url) ->
+      checker.fetch url
     .then (entries) ->
       for entry in entries
         msg.send entry.toString()
@@ -74,7 +77,8 @@ module.exports = (robot) ->
       msg.send "[ERROR] #{err}"
       return if err.message isnt 'Not a feed'
       checker.deleteFeed msg.message.room, url
-      FindRSS url
+      .then ->
+        FindRSS url
       .then (feeds) ->
         return if feeds?.length < 1
         msg.send _.flatten([
