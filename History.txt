@@ -1,3 +1,7 @@
+=== 0.5.2 2014-09-30
+
+* bugfix "new entry" notification on "hubot rss add [URL]"  #15
+
 === 0.5.1 2014-09-29
 
 * use strict
