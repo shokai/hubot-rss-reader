@@ -1,3 +1,11 @@
+=== 0.5.1 2014-09-29
+
+* use strict
+* little fix
+  * catch error in RSSChecker.check()
+  * fix RSSChecker.check
+  * fix command "hubot rss add (url)"
+
 === 0.5.0 2014-09-29
 
 * find RSS if page is URL is not a Feed  #14
