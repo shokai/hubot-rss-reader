@@ -11,6 +11,7 @@ FeedParser = require 'feedparser'
 async      = require 'async'
 debug      = require('debug')('hubot-rss-reader:rss-checker')
 cheerio    = require 'cheerio'
+Promise    = require 'bluebird'
 
 module.exports = class RSSChecker extends events.EventEmitter
   constructor: (@robot) ->
@@ -30,53 +31,54 @@ module.exports = class RSSChecker extends events.EventEmitter
     summary = lines.join '\n'
     return summary.replace(/\n\n\n+/g, '\n\n')
 
-  fetch: (feed_url_or_opts, callback = ->) ->
-    if typeof feed_url_or_opts is 'string'
-      feed_url = feed_url_or_opts
-      opts = {init: no}
-    else
-      feed_url = feed_url_or_opts.url
-      opts = feed_url_or_opts
-    debug "fetch #{feed_url}"
-    feedparser = new FeedParser
-    req = request feed_url
+  fetch: (feed_url_or_opts) ->
+    return new Promise (resolve, reject) =>
+      if typeof feed_url_or_opts is 'string'
+        feed_url = feed_url_or_opts
+        opts = {init: no}
+      else
+        feed_url = feed_url_or_opts.url
+        opts = feed_url_or_opts
+      debug "fetch #{feed_url}"
+      feedparser = new FeedParser
+      req = request feed_url
 
-    req.on 'error', (err) ->
-      callback err
+      req.on 'error', (err) ->
+        reject err
 
-    req.on 'response', (res) ->
-      stream = this
-      if res.statusCode isnt 200
-        return callback "statusCode: #{res.statusCode}"
-      stream.pipe feedparser
+      req.on 'response', (res) ->
+        stream = this
+        if res.statusCode isnt 200
+          return reject "statusCode: #{res.statusCode}"
+        stream.pipe feedparser
 
-    feedparser.on 'error', (err) ->
-      callback err
+      feedparser.on 'error', (err) ->
+        reject err
 
-    entries = []
-    feedparser.on 'data', (chunk) =>
-      entry =
-        url: chunk.link
-        title: chunk.title
-        summary: cleanup_summary(chunk.summary or chunk.description)
-        feed:
-          url: feed_url
-          title: feedparser.meta.title
-        toString: ->
-          s = "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
-          s += "\n#{@summary}" if @summary?.length > 0
-          return s
+      entries = []
+      feedparser.on 'data', (chunk) =>
+        entry =
+          url: chunk.link
+          title: chunk.title
+          summary: cleanup_summary(chunk.summary or chunk.description)
+          feed:
+            url: feed_url
+            title: feedparser.meta.title
+          toString: ->
+            s = "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
+            s += "\n#{@summary}" if @summary?.length > 0
+            return s
 
-      debug entry
-      entries.push entry
-      unless @cache[chunk.link]
-        @cache[chunk.link] = true
-        @emit 'new entry', entry unless opts.init
+        debug entry
+        entries.push entry
+        unless @cache[chunk.link]
+          @cache[chunk.link] = true
+          @emit 'new entry', entry unless opts.init
 
-    feedparser.on 'end', ->
-      callback null, entries
+      feedparser.on 'end', ->
+        resolve entries
 
-  check: (opts = {init: no}, callback = ->) ->
+  check: (opts = {init: no}) ->
     debug "start checking all feeds"
     feeds = []
     for room, _feeds of (opts.feeds or @robot.brain.get('feeds'))
@@ -84,18 +86,19 @@ module.exports = class RSSChecker extends events.EventEmitter
     feeds = _.uniq feeds
 
     interval = 1
-    async.eachSeries feeds, (url, next) =>
-      do (opts) =>
+    Promise.each feeds, (url) =>
+      new Promise (resolve) ->
         setTimeout =>
-          opts.url = url
-          @fetch opts, (err, entry) =>
-            if err
-              debug err
-              @emit 'error', {error: err, feed: {url: url}}
-            next()
+          resolve url
         , interval
         interval = 5000
-    , callback
+      .then (url) =>
+        do (opts) =>
+          opts.url = url
+          @fetch opts
+      .catch (err) =>
+        debug err
+        @emit 'error', {error: err, feed: {url: url}}
 
   getFeeds: (room) ->
     @robot.brain.get('feeds')?[room] or []
@@ -106,18 +109,20 @@ module.exports = class RSSChecker extends events.EventEmitter
     feeds[room] = urls
     @robot.brain.set 'feeds', feeds
 
-  addFeed: (room, url, callback = ->) ->
-    feeds = @getFeeds room
-    if _.contains feeds, url
-      return callback "#{url} is already registered"
-    feeds.push url
-    @setFeeds room, feeds.sort()
-    callback null, "registered #{url}"
+  addFeed: (room, url) ->
+    new Promise (resolve, reject) =>
+      feeds = @getFeeds room
+      if _.contains feeds, url
+        return reject "#{url} is already registered"
+      feeds.push url
+      @setFeeds room, feeds.sort()
+      resolve "registered #{url}"
 
-  deleteFeed: (room, url, callback = ->) ->
-    feeds = @getFeeds room
-    unless _.contains feeds, url
-      return callback "#{url} is not registered"
-    feeds.splice feeds.indexOf(url), 1
-    @setFeeds room, feeds
-    callback null, "deleted #{url}"
+  deleteFeed: (room, url) ->
+    new Promise (resolve, reject) =>
+      feeds = @getFeeds room
+      unless _.contains feeds, url
+        return reject "#{url} is not registered"
+      feeds.splice feeds.indexOf(url), 1
+      @setFeeds room, feeds
+      resolve "deleted #{url}"

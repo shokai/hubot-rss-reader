@@ -24,6 +24,7 @@
   "homepage": "https://github.com/shokai/hubot-rss-reader",
   "dependencies": {
     "async": "*",
+    "bluebird": "^2.3",
     "cheerio": "*",
     "debug": "*",
     "feedparser": "*",

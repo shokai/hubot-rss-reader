@@ -3,6 +3,7 @@ require path.resolve 'tests', 'test_helper'
 
 assert     = require 'assert'
 RSSChecker = require path.resolve 'libs', 'rss-checker'
+Promise    = require 'bluebird'
 
 checker = new RSSChecker {}
 
@@ -22,7 +23,8 @@ describe 'RSSChecker', ->
       checker.on 'new entry', (entry) ->
         _entries.push entry
 
-      checker.fetch 'http://shokai.org/blog/feed', (err, entries) ->
+      checker.fetch 'http://shokai.org/blog/feed'
+      .then (entries) ->
         assert.ok entries instanceof Array
         for entry in entries
           assert.equal typeof entry.url, 'string', '"url" property not exists'
@@ -41,7 +43,8 @@ describe 'RSSChecker', ->
       checker.on 'new entry', (entry) ->
         assert.ok false
 
-      checker.fetch 'http://shokai.org/blog/feed', (err, entries) ->
+      checker.fetch 'http://shokai.org/blog/feed'
+      .then (entries) ->
         done()
 
 
@@ -58,13 +61,14 @@ describe 'RSSChecker', ->
       checker.on 'new entry', (entry) ->
         assert.ok false, 'detect new entry'
 
-      checker.check {
+      checker.check
         init: yes
         feeds: [
           'http://shokai.org/blog/feed'
           'https://github.com/shokai.atom'
         ]
-      }, done
+      .then ->
+        done()
 
 
     it 'should emit the event "new entry" if {init: no} option', (done) ->
@@ -81,13 +85,13 @@ describe 'RSSChecker', ->
           when /github.com/.test entry.url
             entries_githbu_com.push entry
 
-      checker.check {
+      checker.check
         init: no
         feeds: [
           'http://shokai.org/blog/feed'
           'https://github.com/shokai.atom'
         ]
-      }, ->
+      .then ->
         assert.ok(entries_githbu_com.length > 0, 'detect github.com new entries')
         assert.ok(entries_shokai_org.length > 0, 'detect shokai.org new entries')
         done()

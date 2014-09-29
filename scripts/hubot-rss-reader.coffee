@@ -18,8 +18,9 @@
 path       = require 'path'
 _          = require 'lodash'
 debug      = require('debug')('hubot-rss-reader')
-RSSFinder  = require 'find-rss'
+Promise    = require 'bluebird'
 RSSChecker = require path.join __dirname, '../libs/rss-checker'
+FindRSS    = Promise.promisify require 'find-rss'
 
 ## config
 process.env.HUBOT_RSS_INTERVAL ||= 60*10  # 10 minutes
@@ -32,7 +33,8 @@ module.exports = (robot) ->
   ## wait until connect redis
   setTimeout ->
     run = (opts) ->
-      checker.check opts, ->
+      checker.check opts
+      .then ->
         debug "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
         setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
 
@@ -55,40 +57,42 @@ module.exports = (robot) ->
     last_state_is_error[err.feed.url] = true
     for room, feeds of robot.brain.get('feeds')
       if _.include feeds, err.feed.url
-        robot.messageRoom '#'+room, "[ERROR] #{err.feed.url} - #{err.error.message}"
+        robot.messageRoom '#'+room, "[ERROR] #{err.feed.url} - #{err.error.message or err.error}"
 
   robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[2].trim()
     last_state_is_error[url] = false
     debug "add #{url}"
-    checker.addFeed msg.message.room, url, (err, res) ->
-      if err
-        msg.send err
-        return
+    checker.addFeed msg.message.room, url
+    .then (res) ->
       msg.send res
-      checker.fetch url, (err, entries) ->
-        unless err
-          for entry in entries
-            msg.send entry.toString()
-          return
-        msg.send err
-        if err.message is 'Not a feed'
-          checker.deleteFeed msg.message.room, url
-          RSSFinder url, (err, feeds) ->
-            return if err or feeds?.length < 1
-            msg.send _.flatten([
-              "found some Feeds from #{url}"
-              feeds.map (i) -> " * #{i.url}"
-            ]).join '\n'
-        return
+      return checker.fetch url
+    .then (entries) ->
+      for entry in entries
+        msg.send entry.toString()
+    , (err) ->
+      msg.send "[ERROR] #{err}"
+      return if err.message isnt 'Not a feed'
+      checker.deleteFeed msg.message.room, url
+      FindRSS url
+      .then (feeds) ->
+        return if feeds?.length < 1
+        msg.send _.flatten([
+          "found some Feeds from #{url}"
+          feeds.map (i) -> " * #{i.url}"
+        ]).join '\n'
+    .catch (err) ->
+      msg.send "[ERROR] #{err}"
+
 
   robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)/im, (msg) ->
     url = msg.match[1].trim()
     debug "delete #{url}"
-    checker.deleteFeed msg.message.room, url, (err, res) ->
-      if err
-        return msg.send err
+    checker.deleteFeed msg.message.room, url
+    .then (res) ->
       msg.send res
+    .catch (err) ->
+      msg.send err
 
   robot.respond /rss\s+list/i, (msg) ->
     feeds = checker.getFeeds msg.message.room
