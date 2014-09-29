@@ -27,10 +27,11 @@ module.exports = (grunt) ->
         no_unnecessary_fat_arrows:
           level: 'ignore'
       dist:
-        files: [
-          { expand: yes, cwd: 'scripts/', src: [ '**/*.coffee' ] }
-          { expand: yes, cwd: 'tests/', src: [ '**/*.coffee' ] }
-        ]
+        files:
+          src: [
+            '**/*.coffee'
+            '!node_modules/**'
+          ]
 
     simplemocha:
       options:
@@ -46,7 +47,7 @@ module.exports = (grunt) ->
         interrupt: yes
       dist:
         files: [
-          'scripts/**/*.coffee'
-          'tests/**/*.coffee'
+          '**/*.{coffee,js}'
+          '!node_modules/**'
         ]
         tasks: [ 'test' ]
