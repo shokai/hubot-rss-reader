@@ -33,17 +33,22 @@ module.exports = class RSSChecker extends events.EventEmitter
     summary = lines.join '\n'
     return summary.replace(/\n\n\n+/g, '\n\n')
 
-  fetch: (feed_url_or_opts) ->
+  fetch: (args) ->
     new Promise (resolve, reject) =>
-      if typeof feed_url_or_opts is 'string'
-        feed_url = feed_url_or_opts
-        opts = {init: no}
-      else
-        feed_url = feed_url_or_opts.url
-        opts = feed_url_or_opts
-      debug "fetch #{feed_url}"
+      default_args =
+        url: null
+        init: no
+        room: null
+
+      if typeof args is 'string'
+        args = {url: args}
+      for k,v of default_args
+        unless args.hasOwnProperty k
+          args[k] = v
+      debug "fetch #{args.url}"
+      debug args
       feedparser = new FeedParser
-      req = request feed_url
+      req = request args.url
 
       req.on 'error', (err) ->
         reject err
@@ -64,18 +69,20 @@ module.exports = class RSSChecker extends events.EventEmitter
           title: chunk.title
           summary: cleanup_summary(chunk.summary or chunk.description)
           feed:
-            url: feed_url
+            url: args.url
             title: feedparser.meta.title
           toString: ->
             s = "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
             s += "\n#{@summary}" if @summary?.length > 0
             return s
+          args: args
 
         debug entry
         entries.push entry
-        unless @cache[chunk.link]
-          @cache[chunk.link] = true
-          @emit 'new entry', entry unless opts.init
+        unless @cache[entry.url]
+          @cache[entry.url] = true
+          return if args.init
+          @emit 'new entry', entry
 
       feedparser.on 'end', ->
         resolve entries
