@@ -33,7 +33,6 @@ Install
     export HUBOT_RSS_HEADER=:sushi: # RSS Header Emoji (default is "sushi")
     export DEBUG=hubot-rss-reader   # debug print
 
-
 Usage
 -----
 

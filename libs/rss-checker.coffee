@@ -19,7 +19,7 @@ module.exports = class RSSChecker extends events.EventEmitter
   constructor: (@robot) ->
     @cache = {}
 
-  cleanup_summary = (html) ->
+  cleanup_summary = (html = '') ->
     summary = do (html) ->
       try
         $ = cheerio.load html

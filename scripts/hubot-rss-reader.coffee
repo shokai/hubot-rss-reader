@@ -88,6 +88,7 @@ module.exports = (robot) ->
         ]).join '\n'
     .catch (err) ->
       msg.send "[ERROR] #{err}"
+      debug err.stack
 
 
   robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)/im, (msg) ->
@@ -98,6 +99,7 @@ module.exports = (robot) ->
       msg.send res
     .catch (err) ->
       msg.send err
+      debug err.stack
 
   robot.respond /rss\s+list/i, (msg) ->
     feeds = checker.getFeeds msg.message.room
