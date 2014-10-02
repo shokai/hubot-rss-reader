@@ -1,3 +1,7 @@
+=== 0.5.3 2014-10-02
+
+* bugfix for empty summary
+
 === 0.5.2 2014-09-30
 
 * bugfix "new entry" notification on "hubot rss add [URL]"  #15
