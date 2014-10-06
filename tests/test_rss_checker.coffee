@@ -14,7 +14,7 @@ describe 'RSSChecker', ->
 
   describe 'method "fetch"', ->
 
-    it 'should emit the event "new entry", and callback entries Array', (done) ->
+    it 'should emit the event "new entry", and callback entries Array', ->
 
       @timeout 5000
 
@@ -33,10 +33,11 @@ describe 'RSSChecker', ->
           assert.equal typeof entry.feed?.url, 'string', '"feed.url" property not exists'
           assert.equal typeof entry.feed?.title, 'string', '"feed.title" property not exists'
         assert.equal JSON.stringify(entries.sort()), JSON.stringify(_entries.sort())
-        done()
 
 
-    it 'should not emit the event "new entry" if already crawled', (done) ->
+
+
+    it 'should not emit the event "new entry" if already crawled', ->
 
       @timeout 5000
 
@@ -45,7 +46,11 @@ describe 'RSSChecker', ->
 
       checker.fetch 'http://shokai.org/blog/feed'
       .then (entries) ->
-        done()
+        new Promise (resolve, reject) ->
+          setTimeout ->
+            resolve entries
+          , 500
+
 
 
   it 'should have method "check"', ->
@@ -53,7 +58,7 @@ describe 'RSSChecker', ->
 
   describe 'methods "check"', ->
 
-    it 'should not emit the event "new entry" if {init: yes} option', (done) ->
+    it 'should not emit the event "new entry" if {init: yes} option', ->
 
       @timeout 15000
 
@@ -67,11 +72,9 @@ describe 'RSSChecker', ->
           'http://shokai.org/blog/feed'
           'https://github.com/shokai.atom'
         ]
-      .then ->
-        done()
 
 
-    it 'should emit the event "new entry" if {init: no} option', (done) ->
+    it 'should emit the event "new entry" if {init: no} option', ->
 
       @timeout 15000
 
@@ -91,7 +94,6 @@ describe 'RSSChecker', ->
           'http://shokai.org/blog/feed'
           'https://github.com/shokai.atom'
         ]
-      .then ->
+      .then (entries) ->
         assert.ok(entries_githbu_com.length > 0, 'detect github.com new entries')
         assert.ok(entries_shokai_org.length > 0, 'detect shokai.org new entries')
-        done()
