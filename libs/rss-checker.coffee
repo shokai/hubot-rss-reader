@@ -48,7 +48,9 @@ module.exports = class RSSChecker extends events.EventEmitter
       debug "fetch #{args.url}"
       debug args
       feedparser = new FeedParser
-      req = request args.url
+      req = request
+        uri: args.url
+        timeout: 10000
 
       req.on 'error', (err) ->
         reject err
