@@ -1,3 +1,8 @@
+=== 0.5.4 2014-10-09
+
+* set HTTP Request timeout 10 sec
+* fix tests  #13
+
 === 0.5.3 2014-10-02
 
 * bugfix for empty summary
