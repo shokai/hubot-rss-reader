@@ -19,7 +19,7 @@ Install
 -------
 
     % npm install hubot-rss-reader -save
-
+    % npm install coffee-script@">=1.8.0" -save
 
 ### edit `external-script.json`
 
