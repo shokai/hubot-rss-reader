@@ -52,6 +52,7 @@ module.exports = (robot) ->
         try
           robot.send? {room: room}, entry.toString()
         catch err
+          debug "Error on sending to room: \"#{room}\""
           debug err
 
   checker.on 'error', (err) ->
@@ -64,6 +65,7 @@ module.exports = (robot) ->
         try
           robot.send? {room: room}, "[ERROR] #{err.feed.url} - #{err.error.message or err.error}"
         catch err
+          debug "Error on sending to room: \"#{room}\""
           debug err
 
   robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)/im, (msg) ->
