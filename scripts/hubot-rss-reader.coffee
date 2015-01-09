@@ -68,7 +68,7 @@ module.exports = (robot) ->
           debug "Error on sending to room: \"#{room}\""
           debug err
 
-  robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)/im, (msg) ->
+  robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)$/im, (msg) ->
     url = msg.match[2].trim()
     last_state_is_error[url] = false
     debug "add #{url}"
@@ -99,7 +99,7 @@ module.exports = (robot) ->
       debug err.stack
 
 
-  robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)/im, (msg) ->
+  robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)$/im, (msg) ->
     url = msg.match[1].trim()
     debug "delete #{url}"
     checker.deleteFeed msg.message.room, url
@@ -109,7 +109,7 @@ module.exports = (robot) ->
       msg.send err
       debug err.stack
 
-  robot.respond /rss\s+list/i, (msg) ->
+  robot.respond /rss\s+list$/i, (msg) ->
     feeds = checker.getFeeds msg.message.room
     if feeds.length < 1
       msg.send "nothing"
