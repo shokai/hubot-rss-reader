@@ -1,3 +1,9 @@
+=== 0.6.0 2015-01-09
+
+* bugfix for adapter "hubot-slack" v3  #21
+* update README, installation of coffee-script v1.8.x for Promise  #20
+  * thank you for contributing @uk-ar
+
 === 0.5.4 2014-10-09
 
 * set HTTP Request timeout 10 sec
