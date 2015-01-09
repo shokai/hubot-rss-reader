@@ -109,6 +109,16 @@ module.exports = (robot) ->
       msg.send err
       debug err.stack
 
+  robot.respond /rss\s+delete\s+#([^\s]+)$/im, (msg) ->
+    room = msg.match[1].trim()
+    debug "delete ##{room}"
+    checker.deleteRoom room
+    .then (res) ->
+      msg.send res
+    .catch (err) ->
+      msg.send err
+      debug err.stack
+
   robot.respond /rss\s+list$/i, (msg) ->
     feeds = checker.getFeeds msg.message.room
     if feeds.length < 1

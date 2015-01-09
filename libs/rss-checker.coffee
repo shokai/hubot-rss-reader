@@ -145,3 +145,12 @@ module.exports = class RSSChecker extends events.EventEmitter
       feeds.splice feeds.indexOf(url), 1
       @setFeeds room, feeds
       resolve "deleted #{url}"
+
+  deleteRoom: (name) ->
+    new Promise (resolve, reject) =>
+      rooms = @getAllFeeds() or {}
+      unless rooms.hasOwnProperty name
+        return reject "room ##{name} is not exists"
+      delete rooms[name]
+      @robot.brain.set 'feeds', rooms
+      resolve "deleted room ##{name}"
