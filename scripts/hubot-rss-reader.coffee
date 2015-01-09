@@ -4,7 +4,9 @@
 # Commands:
 #   hubot rss add https://github.com/shokai.atom
 #   hubot rss delete http://shokai.org/blog/feed
+#   hubot rss delete #room_name
 #   hubot rss list
+#   hubot rss dump
 #
 # Author:
 #   @shokai

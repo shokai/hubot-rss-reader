@@ -46,11 +46,12 @@ Usage
 ### delete
 
     hubot rss delete https://github.com/shokai.atom
-
+    hubot rss delete #room_name
 
 ### list
 
     hubot rss list
+    hubot rss dump
 
 
 Test
