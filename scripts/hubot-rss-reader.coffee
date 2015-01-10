@@ -89,8 +89,11 @@ module.exports = (robot) ->
     .then (url) ->
       checker.fetch {url: url, room: msg.message.room}
     .then (entries) ->
-      for entry in entries
+      for entry in entries.splice(0,5)
         send {room: msg.message.room}, entry.toString()
+      if entries.length > 0
+        send {room: msg.message.room},
+        "#{process.env.HUBOT_RSS_HEADER} #{entries.length} entries has been omitted"
     , (err) ->
       msg.send "[ERROR] #{err}"
       return if err.message isnt 'Not a feed'
