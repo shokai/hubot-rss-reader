@@ -1,3 +1,7 @@
+=== 0.6.2 2015-01-11
+
+* queue robot.send, omit too many entries on add  #21
+
 === 0.6.1 2015-01-09
 
 * add command "hubot rss delete #room_name"  #23
