@@ -26,6 +26,21 @@ process.env.HUBOT_RSS_HEADER   ||= ':sushi:'
 
 module.exports = (robot) ->
 
+  send_queue = []
+  send = (envelope, body) ->
+    send_queue.push {envelope: envelope, body: body}
+
+  setInterval ->
+    return if typeof robot.send isnt 'function'
+    return if send_queue.length < 1
+    msg = send_queue.shift()
+    try
+      robot.send msg.envelope, msg.body
+    catch err
+      debug "Error on sending to room: \"#{room}\""
+      debug err
+  , 500
+
   checker = new RSSChecker robot
 
   ## wait until connect redis
@@ -51,11 +66,7 @@ module.exports = (robot) ->
       if room isnt entry.args.room and
          _.include feeds, entry.feed.url
         debug "#{entry.title} #{entry.url} => #{room}"
-        try
-          robot.send? {room: room}, entry.toString()
-        catch err
-          debug "Error on sending to room: \"#{room}\""
-          debug err
+        send {room: room}, entry.toString()
 
   checker.on 'error', (err) ->
     debug err
@@ -64,11 +75,7 @@ module.exports = (robot) ->
     last_state_is_error[err.feed.url] = true
     for room, feeds of checker.getAllFeeds()
       if _.include feeds, err.feed.url
-        try
-          robot.send? {room: room}, "[ERROR] #{err.feed.url} - #{err.error.message or err.error}"
-        catch err
-          debug "Error on sending to room: \"#{room}\""
-          debug err
+        send {room: room}, "[ERROR] #{err.feed.url} - #{err.error.message or err.error}"
 
   robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)$/im, (msg) ->
     url = msg.match[2].trim()
@@ -83,7 +90,7 @@ module.exports = (robot) ->
       checker.fetch {url: url, room: msg.message.room}
     .then (entries) ->
       for entry in entries
-        msg.send entry.toString()
+        send {room: msg.message.room}, entry.toString()
     , (err) ->
       msg.send "[ERROR] #{err}"
       return if err.message isnt 'Not a feed'
