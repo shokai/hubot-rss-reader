@@ -44,7 +44,7 @@ module.exports = (robot) ->
   checker = new RSSChecker robot
 
   ## wait until connect redis
-  setTimeout ->
+  robot.brain.once 'loaded', ->
     run = (opts) ->
       checker.check opts
       .then ->
@@ -56,7 +56,7 @@ module.exports = (robot) ->
         setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
 
     run {init: yes}
-  , 10000
+
 
   last_state_is_error = {}
 
