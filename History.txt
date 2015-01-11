@@ -1,3 +1,7 @@
+=== 0.6.3 2015-01-11
+
+* use "loaded" event of robot.brain  #6
+
 === 0.6.2 2015-01-11
 
 * queue robot.send, omit too many entries on add  #21
