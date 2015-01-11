@@ -26,6 +26,16 @@ process.env.HUBOT_RSS_HEADER   ||= ':sushi:'
 
 module.exports = (robot) ->
 
+  logger =
+    info: (msg) ->
+      return debug msg if debug.enabled
+      msg = JSON.stringify msg if typeof msg isnt 'string'
+      robot.logger.info "#{debug.namespace}: #{msg}"
+    error: (msg) ->
+      return debug msg if debug.enabled
+      msg = JSON.stringify msg if typeof msg isnt 'string'
+      robot.logger.error "#{debug.namespace}: #{msg}"
+
   send_queue = []
   send = (envelope, body) ->
     send_queue.push {envelope: envelope, body: body}
@@ -37,8 +47,8 @@ module.exports = (robot) ->
     try
       robot.send msg.envelope, msg.body
     catch err
-      debug "Error on sending to room: \"#{room}\""
-      debug err
+      logger.error "Error on sending to room: \"#{room}\""
+      logger.error err
   , 500
 
   checker = new RSSChecker robot
@@ -46,13 +56,14 @@ module.exports = (robot) ->
   ## wait until connect redis
   robot.brain.once 'loaded', ->
     run = (opts) ->
+      logger.info "checker start"
       checker.check opts
       .then ->
-        debug "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
+        logger.info "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
         setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
       , (err) ->
-        debug err
-        debug "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
+        logger.error err
+        logger.info "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
         setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
 
     run {init: yes}
@@ -65,11 +76,11 @@ module.exports = (robot) ->
     for room, feeds of checker.getAllFeeds()
       if room isnt entry.args.room and
          _.include feeds, entry.feed.url
-        debug "#{entry.title} #{entry.url} => #{room}"
+        logger.info "#{entry.title} #{entry.url} => #{room}"
         send {room: room}, entry.toString()
 
   checker.on 'error', (err) ->
-    debug err
+    logger.error err
     if last_state_is_error[err.feed.url]  # reduce error notify
       return
     last_state_is_error[err.feed.url] = true
@@ -80,7 +91,7 @@ module.exports = (robot) ->
   robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)$/im, (msg) ->
     url = msg.match[2].trim()
     last_state_is_error[url] = false
-    debug "add #{url}"
+    logger.info "add #{url}"
     checker.addFeed msg.message.room, url
     .then (res) ->
       new Promise (resolve) ->
@@ -108,28 +119,28 @@ module.exports = (robot) ->
         ]).join '\n'
     .catch (err) ->
       msg.send "[ERROR] #{err}"
-      debug err.stack
+      logger.error err.stack
 
 
   robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)$/im, (msg) ->
     url = msg.match[1].trim()
-    debug "delete #{url}"
+    logger.info "delete #{url}"
     checker.deleteFeed msg.message.room, url
     .then (res) ->
       msg.send res
     .catch (err) ->
       msg.send err
-      debug err.stack
+      logger.error err.stack
 
   robot.respond /rss\s+delete\s+#([^\s]+)$/im, (msg) ->
     room = msg.match[1].trim()
-    debug "delete ##{room}"
+    logger.info "delete ##{room}"
     checker.deleteRoom room
     .then (res) ->
       msg.send res
     .catch (err) ->
       msg.send err
-      debug err.stack
+      logger.error err.stack
 
   robot.respond /rss\s+list$/i, (msg) ->
     feeds = checker.getFeeds msg.message.room
