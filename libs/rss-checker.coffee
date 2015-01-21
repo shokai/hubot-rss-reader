@@ -54,7 +54,7 @@ module.exports = class RSSChecker extends events.EventEmitter
         uri: args.url
         timeout: 10000
         headers:
-          'User-Agent': 'Mozilla/5.0 (Hubot) AppleWebKit/537.36 (KHTML, like Gecko) Hubot'
+          'User-Agent': process.env.HUBOT_RSS_USERAGENT
 
       req.on 'error', (err) ->
         reject err
