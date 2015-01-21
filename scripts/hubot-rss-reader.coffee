@@ -19,6 +19,8 @@ debug      = require('debug')('hubot-rss-reader')
 Promise    = require 'bluebird'
 RSSChecker = require path.join __dirname, '../libs/rss-checker'
 FindRSS    = Promise.promisify require 'find-rss'
+Entities   = require 'html-entities'
+entities   = new Entities.XmlEntities()
 
 ## config
 process.env.HUBOT_RSS_INTERVAL ||= 60*10  # 10 minutes
@@ -77,7 +79,8 @@ module.exports = (robot) ->
       if room isnt entry.args.room and
          _.include feeds, entry.feed.url
         logger.info "#{entry.title} #{entry.url} => #{room}"
-        send {room: room}, entry.toString()
+        message = entities.decode entry.toString()
+        send {room: room}, message
 
   checker.on 'error', (err) ->
     logger.error err
@@ -101,7 +104,8 @@ module.exports = (robot) ->
       checker.fetch {url: url, room: msg.message.room}
     .then (entries) ->
       for entry in entries.splice(0,5)
-        send {room: msg.message.room}, entry.toString()
+        message = entities.decode entry.toString()
+        send {room: msg.message.room}, message
       if entries.length > 0
         send {room: msg.message.room},
         "#{process.env.HUBOT_RSS_HEADER} #{entries.length} entries has been omitted"
