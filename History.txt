@@ -1,3 +1,9 @@
+=== 0.6.5 2015-01-22
+
+* set User-Agent with ENV variable "HUBOT_RSS_USERAGENT"  #25
+* decode XML Entities in feed  #26
+  * thank you for contributing @patrys
+
 === 0.6.4 2015-01-11
 
 * use robot.logger if DEBUG is not enabled
