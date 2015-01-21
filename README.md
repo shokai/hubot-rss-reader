@@ -13,6 +13,7 @@ Requirements
 ------------
 
 - redis-brain
+- coffee-script 1.8+
 
 
 Install
