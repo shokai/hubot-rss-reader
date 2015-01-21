@@ -10,6 +10,8 @@ events     = require 'events'
 _          = require 'lodash'
 request    = require 'request'
 FeedParser = require 'feedparser'
+Entities   = require('html-entities').XmlEntities
+entities   = new Entities
 async      = require 'async'
 debug      = require('debug')('hubot-rss-reader:rss-checker')
 cheerio    = require 'cheerio'
@@ -70,11 +72,11 @@ module.exports = class RSSChecker extends events.EventEmitter
       feedparser.on 'data', (chunk) =>
         entry =
           url: chunk.link
-          title: chunk.title
-          summary: cleanup_summary(chunk.summary or chunk.description)
+          title: entities.decode(chunk.title or '')
+          summary: cleanup_summary entities.decode(chunk.summary or chunk.description or '')
           feed:
             url: args.url
-            title: feedparser.meta.title
+            title: entities.decode(feedparser.meta.title or '')
           toString: ->
             s = "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
             s += "\n#{@summary}" if @summary?.length > 0
