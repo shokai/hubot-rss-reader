@@ -42,6 +42,13 @@ module.exports = (robot) ->
   send = (envelope, body) ->
     send_queue.push {envelope: envelope, body: body}
 
+  getRoom = (msg) ->
+    switch robot.adapterName
+      when 'hipchat'
+        msg.message.user.reply_to
+      else
+        msg.message.room
+
   setInterval ->
     return if typeof robot.send isnt 'function'
     return if send_queue.length < 1
@@ -94,24 +101,24 @@ module.exports = (robot) ->
     url = msg.match[2].trim()
     last_state_is_error[url] = false
     logger.info "add #{url}"
-    room = if msg.robot.adapterName is 'hipchat' then msg.message.user.reply_to else msg.message.room
+    room = getRoom msg
     checker.addFeed room, url
     .then (res) ->
       new Promise (resolve) ->
         msg.send res
         resolve url
     .then (url) ->
-      checker.fetch {url: url, room: msg.message.room}
+      checker.fetch {url: url, room: room}
     .then (entries) ->
       for entry in entries.splice(0,5)
-        send {room: msg.message.room}, entry.toString()
+        send {room: room}, entry.toString()
       if entries.length > 0
-        send {room: msg.message.room},
+        send {room: room},
         "#{process.env.HUBOT_RSS_HEADER} #{entries.length} entries has been omitted"
     , (err) ->
       msg.send "[ERROR] #{err}"
       return if err.message isnt 'Not a feed'
-      checker.deleteFeed msg.message.room, url
+      checker.deleteFeed room, url
       .then ->
         FindRSS url
       .then (feeds) ->
@@ -128,7 +135,7 @@ module.exports = (robot) ->
   robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)$/im, (msg) ->
     url = msg.match[1].trim()
     logger.info "delete #{url}"
-    checker.deleteFeed msg.message.room, url
+    checker.deleteFeed getRoom(msg), url
     .then (res) ->
       msg.send res
     .catch (err) ->
@@ -146,7 +153,7 @@ module.exports = (robot) ->
       logger.error err.stack
 
   robot.respond /rss\s+list$/i, (msg) ->
-    feeds = checker.getFeeds msg.message.room
+    feeds = checker.getFeeds getRoom(msg)
     if feeds.length < 1
       msg.send "nothing"
     else
