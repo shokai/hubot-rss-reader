@@ -1,3 +1,8 @@
+=== 0.6.6 2015-04-18
+
+* works on HipChat (probably)  #29
+  * thank you for contributing @motchang
+
 === 0.6.5 2015-01-22
 
 * set User-Agent with ENV variable "HUBOT_RSS_USERAGENT"  #25
