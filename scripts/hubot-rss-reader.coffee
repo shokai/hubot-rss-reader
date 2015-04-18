@@ -94,7 +94,8 @@ module.exports = (robot) ->
     url = msg.match[2].trim()
     last_state_is_error[url] = false
     logger.info "add #{url}"
-    checker.addFeed msg.message.room, url
+    room = if msg.robot.adapterName is 'hipchat' then msg.message.user.reply_to else msg.message.room
+    checker.addFeed room, url
     .then (res) ->
       new Promise (resolve) ->
         msg.send res
