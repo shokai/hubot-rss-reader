@@ -24,7 +24,7 @@
   "homepage": "https://github.com/shokai/hubot-rss-reader",
   "dependencies": {
     "async": "*",
-    "bluebird": "^2.3",
+    "bluebird": "*",
     "cheerio": "*",
     "debug": "*",
     "feedparser": "*",
@@ -36,13 +36,13 @@
   },
   "devDependencies": {
     "coffee-errors": "*",
-    "coffee-script": "^1.7.1",
-    "mocha": "^1.21.0",
+    "coffee-script": "^1.9",
+    "mocha": "*",
     "grunt": "*",
     "grunt-cli": "*",
     "grunt-simple-mocha": "*",
     "grunt-notify": "*",
     "grunt-coffeelint": "*",
-    "grunt-contrib-watch": "git+https://github.com/gruntjs/grunt-contrib-watch"
+    "grunt-contrib-watch": "*"
   }
 }
