@@ -22,9 +22,10 @@ FindRSS    = Promise.promisify require 'find-rss'
 
 ## config
 package_json = require path.join __dirname, '../package.json'
-process.env.HUBOT_RSS_INTERVAL  ||= 60*10  # 10 minutes
-process.env.HUBOT_RSS_HEADER    ||= ':sushi:'
-process.env.HUBOT_RSS_USERAGENT ||= "hubot-rss-reader/#{package_json.version}"
+process.env.HUBOT_RSS_INTERVAL     ||= 60*10  # 10 minutes
+process.env.HUBOT_RSS_HEADER       ||= ':sushi:'
+process.env.HUBOT_RSS_USERAGENT    ||= "hubot-rss-reader/#{package_json.version}"
+process.env.HUBOT_RSS_PRINTSUMMARY ||= "false"
 
 module.exports = (robot) ->
 

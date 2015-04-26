@@ -79,7 +79,7 @@ module.exports = class RSSChecker extends events.EventEmitter
             title: entities.decode(feedparser.meta.title or '')
           toString: ->
             s = "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
-            s += "\n#{@summary}" if @summary?.length > 0
+            s += "\n#{@summary}" if process.env.HUBOT_RSS_PRINTSUMMARY == "true" && @summary?.length > 0
             return s
           args: args
 
