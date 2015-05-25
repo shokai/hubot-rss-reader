@@ -37,12 +37,13 @@
   "devDependencies": {
     "coffee-errors": "*",
     "coffee-script": "^1.9",
-    "mocha": "*",
     "grunt": "*",
     "grunt-cli": "*",
-    "grunt-simple-mocha": "*",
-    "grunt-notify": "*",
     "grunt-coffeelint": "*",
-    "grunt-contrib-watch": "*"
+    "grunt-contrib-watch": "*",
+    "grunt-notify": "*",
+    "grunt-simple-mocha": "*",
+    "hubot-brain-redis-hash": "*",
+    "mocha": "*"
   }
 }

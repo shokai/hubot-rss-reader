@@ -19,7 +19,12 @@ Promise    = require 'bluebird'
 
 module.exports = class RSSChecker extends events.EventEmitter
   constructor: (@robot) ->
-    @cache = {}
+    @cache =
+      prefix: "hubot-rss-reader:"
+      set: (key, value) =>
+        @robot.brain.set "#{@prefix}#{key}", value
+      get: (key) =>
+        @robot.brain.get "#{@prefix}#{key}"
 
   cleanup_summary = (html = '') ->
     summary = do (html) ->
@@ -86,8 +91,8 @@ module.exports = class RSSChecker extends events.EventEmitter
 
         debug entry
         entries.push entry
-        unless @cache[entry.url]
-          @cache[entry.url] = true
+        unless @cache.get entry.url
+          @cache.set entry.url, true
           return if args.init
           @emit 'new entry', entry
 
