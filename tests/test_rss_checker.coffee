@@ -1,11 +1,14 @@
+'use strict'
+
 path = require 'path'
 require path.resolve 'tests', 'test_helper'
 
 assert     = require 'assert'
 RSSChecker = require path.resolve 'libs', 'rss-checker'
 Promise    = require 'bluebird'
+Hubot      = require path.resolve 'tests', 'dummybot'
 
-checker = new RSSChecker {}
+checker = new RSSChecker new Hubot
 
 describe 'RSSChecker', ->
 
@@ -18,7 +21,7 @@ describe 'RSSChecker', ->
 
       @timeout 5000
 
-      checker = new RSSChecker {}
+      checker = new RSSChecker new Hubot
       _entries = []
       checker.on 'new entry', (entry) ->
         _entries.push entry
@@ -62,7 +65,7 @@ describe 'RSSChecker', ->
 
       @timeout 15000
 
-      checker = new RSSChecker {}
+      checker = new RSSChecker new Hubot
       entries_shokai_org = []
       entries_githbu_com = []
       checker.on 'new entry', (entry) ->
