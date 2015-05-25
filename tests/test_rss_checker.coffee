@@ -58,23 +58,7 @@ describe 'RSSChecker', ->
 
   describe 'methods "check"', ->
 
-    it 'should not emit the event "new entry" if {init: yes} option', ->
-
-      @timeout 15000
-
-      checker = new RSSChecker {}
-      checker.on 'new entry', (entry) ->
-        assert.ok false, 'detect new entry'
-
-      checker.check
-        init: yes
-        feeds: [
-          'http://shokai.org/blog/feed'
-          'https://github.com/shokai.atom'
-        ]
-
-
-    it 'should emit the event "new entry" if {init: no} option', ->
+    it 'should emit the event "new entry"', ->
 
       @timeout 15000
 
@@ -89,7 +73,6 @@ describe 'RSSChecker', ->
             entries_githbu_com.push entry
 
       checker.check
-        init: no
         feeds: [
           'http://shokai.org/blog/feed'
           'https://github.com/shokai.atom'
