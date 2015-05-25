@@ -30,7 +30,6 @@
     "feedparser": "*",
     "find-rss": "*",
     "html-entities": "*",
-    "hubot-scripts": "*",
     "lodash": "*",
     "request": "*"
   },
