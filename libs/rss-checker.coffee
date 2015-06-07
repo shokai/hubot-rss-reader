@@ -16,6 +16,7 @@ async      = require 'async'
 debug      = require('debug')('hubot-rss-reader:rss-checker')
 cheerio    = require 'cheerio'
 Promise    = require 'bluebird'
+c          = require 'irc-colors'
 
 module.exports = class RSSChecker extends events.EventEmitter
   constructor: (@robot) ->
@@ -78,7 +79,11 @@ module.exports = class RSSChecker extends events.EventEmitter
             url: args.url
             title: entities.decode(feedparser.meta.title or '')
           toString: ->
-            s = "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
+            if process.env.HUBOT_RSS_IRCCOLORS is "true"
+              s = "#{c.pink(process.env.HUBOT_RSS_HEADER)} #{@title} #{c.purple('- ['+@feed.title+']')}\n#{c.lightgrey.underline(@url)}"
+            else
+              s = "#{process.env.HUBOT_RSS_HEADER} #{@title} - [#{@feed.title}]\n#{@url}"
+
             if process.env.HUBOT_RSS_PRINTSUMMARY is "true" and @summary?.length > 0
               s += "\n#{@summary}"
             return s
