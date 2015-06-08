@@ -1,3 +1,11 @@
+=== 0.6.8 2015-06-08
+
+* added ENV var "HUBOT_RSS_IRCCOLORS"  #32
+  * default is "false"
+  * switch IRC color message
+  * thank you for contributing @skddc
+  * using irc-colors npm
+
 === 0.6.7 2015-04-27
 
 * added ENV var "HUBOT_RSS_PRINTSUMMARY"  #30
