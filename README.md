@@ -35,6 +35,8 @@ Install
     export HUBOT_RSS_USERAGENT=hubot   # (default is "hubot-rss-reader/#{package_version}")
     export DEBUG=hubot-rss-reader*     # debug print
     export HUBOT_RSS_PRINTSUMMARY=true # print summary (default is "true")
+    export HUBOT_RSS_IRCCOLORS=true    # use IRC color message (default is "false")
+
 
 Usage
 -----
