@@ -1,0 +1,6 @@
+machine:
+  node:
+    version: 0.12
+notify:
+  webhooks:
+    - url: https://masuilab-hubot2.herokuapp.com/circleci-webhook?room=shookai

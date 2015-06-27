@@ -1,8 +1,0 @@
-language: node_js
-node_js:
-  - '0.10'
-services:
-  - redis
-notifications:
-  slack:
-    secure: UdIygyh+Hhal0gKaEOpDLmdDBAo9dlQtdqVJC0vnqBa0//a989vQ2F1e3y8SSz1XxR1b/tfJcGVJg5SOru/z1fYpN7jYTPyUSuQPN/q5z2pGgvrn0JuP+uh+XDQ/WuGSXNJfFE7SFa5YhJurHTe+buEDABEPHC+NVLsqtoKxgo4=
