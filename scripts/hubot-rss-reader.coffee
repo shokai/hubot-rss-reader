@@ -26,6 +26,7 @@ process.env.HUBOT_RSS_INTERVAL     ||= 60*10  # 10 minutes
 process.env.HUBOT_RSS_HEADER       ||= ':sushi:'
 process.env.HUBOT_RSS_USERAGENT    ||= "hubot-rss-reader/#{package_json.version}"
 process.env.HUBOT_RSS_PRINTSUMMARY ||= "true"
+process.env.HUBOT_RSS_PRINTIMAGE   ||= "true"
 process.env.HUBOT_RSS_IRCCOLORS    ||= "false"
 
 module.exports = (robot) ->

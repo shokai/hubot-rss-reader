@@ -26,8 +26,9 @@ module.exports = class RSSChecker extends events.EventEmitter
     summary = do (html) ->
       try
         $ = cheerio.load html
-        if img = $('img').attr('src')
-          return img + '\n' + $.root().text()
+        if process.env.HUBOT_RSS_PRINTIMAGE is 'true'
+          if img = $('img').attr('src')
+            return img + '\n' + $.root().text()
         return $.root().text()
       catch
         return html

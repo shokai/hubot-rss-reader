@@ -28,13 +28,14 @@ Install
 ["hubot-rss-reader"]
 ```
 
-### Configure (ENV var)
+### Configure (ENV vars)
 
+    export DEBUG=hubot-rss-reader*     # debug print
     export HUBOT_RSS_INTERVAL=600      # 600 sec (default)
     export HUBOT_RSS_HEADER=:sushi:    # RSS Header Emoji (default is "sushi")
     export HUBOT_RSS_USERAGENT=hubot   # (default is "hubot-rss-reader/#{package_version}")
-    export DEBUG=hubot-rss-reader*     # debug print
     export HUBOT_RSS_PRINTSUMMARY=true # print summary (default is "true")
+    export HUBOT_RSS_PRINTIMAGE=false  # print image in summary (default is "true")
     export HUBOT_RSS_IRCCOLORS=true    # use IRC color message (default is "false")
 
 
