@@ -27,6 +27,7 @@ process.env.HUBOT_RSS_HEADER       ||= ':sushi:'
 process.env.HUBOT_RSS_USERAGENT    ||= "hubot-rss-reader/#{package_json.version}"
 process.env.HUBOT_RSS_PRINTSUMMARY ||= "true"
 process.env.HUBOT_RSS_PRINTIMAGE   ||= "true"
+process.env.HUBOT_RSS_PRINTERROR   ||= "true"
 process.env.HUBOT_RSS_IRCCOLORS    ||= "false"
 
 module.exports = (robot) ->
@@ -93,6 +94,8 @@ module.exports = (robot) ->
 
   checker.on 'error', (err) ->
     logger.error err
+    if process.env.HUBOT_RSS_PRINTERROR isnt "true"
+      return
     if last_state_is_error[err.feed.url]  # reduce error notify
       return
     last_state_is_error[err.feed.url] = true
