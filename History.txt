@@ -1,3 +1,12 @@
+=== 0.6.9 2015-06-27
+
+* added ENV var "HUBOT_RSS_PRINTIMAGE"  #33
+  * switch printnig image in summary
+  * default is "true"
+* added ENV var "HUBOT_RSS_PRINTERROR"  #33
+  * switch printing error message from crawler (e.g. 404 not found)
+  * default is "true"
+
 === 0.6.8 2015-06-08
 
 * added ENV var "HUBOT_RSS_IRCCOLORS"  #32
