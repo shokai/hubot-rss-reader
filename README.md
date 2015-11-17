@@ -13,14 +13,14 @@ Requirements
 ------------
 
 - redis-brain
-- coffee-script 1.8+
+- coffee-script 1.10+
 
 
 Install
 -------
 
     % npm install hubot-rss-reader -save
-    % npm install coffee-script@">=1.8.0" -save
+    % npm install coffee-script@">=1.10.0" -save
 
 ### edit `external-script.json`
 
