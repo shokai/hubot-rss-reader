@@ -1,3 +1,10 @@
+=== 0.7.0 2015-11-18
+
+* fix for coffee-script 1.6.x  #40
+  * thank you for contributing @sairoutine
+* convert encoding if not UTF-8  #38
+  * detect charset from "encoding" attribute of XML, then convert
+
 === 0.6.9 2015-06-27
 
 * added ENV var "HUBOT_RSS_PRINTIMAGE"  #33
