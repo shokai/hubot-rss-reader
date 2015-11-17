@@ -18,6 +18,8 @@ cheerio    = require 'cheerio'
 Promise    = require 'bluebird'
 IrcColor   = require 'irc-colors'
 
+charsetConvertStream = require './charset-convert-stream'
+
 module.exports = class RSSChecker extends events.EventEmitter
   constructor: (@robot) ->
     @cache = {}
@@ -55,6 +57,7 @@ module.exports = class RSSChecker extends events.EventEmitter
       req = request
         uri: args.url
         timeout: 10000
+        encoding: null
         headers:
           'User-Agent': process.env.HUBOT_RSS_USERAGENT
 
@@ -62,10 +65,11 @@ module.exports = class RSSChecker extends events.EventEmitter
         reject err
 
       req.on 'response', (res) ->
-        stream = this
         if res.statusCode isnt 200
           return reject "statusCode: #{res.statusCode}"
-        stream.pipe feedparser
+        this
+          .pipe charsetConvertStream()
+          .pipe feedparser
 
       feedparser.on 'error', (err) ->
         reject err
