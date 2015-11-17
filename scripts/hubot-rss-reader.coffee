@@ -108,7 +108,7 @@ module.exports = (robot) ->
     last_state_is_error[url] = false
     logger.info "add #{url}"
     room = getRoom msg
-    checker.addFeed room, url
+    checker.addFeed(room, url)
     .then (res) ->
       new Promise (resolve) ->
         msg.send res
@@ -124,7 +124,7 @@ module.exports = (robot) ->
     , (err) ->
       msg.send "[ERROR] #{err}"
       return if err.message isnt 'Not a feed'
-      checker.deleteFeed room, url
+      checker.deleteFeed(room, url)
       .then ->
         FindRSS url
       .then (feeds) ->
@@ -141,7 +141,7 @@ module.exports = (robot) ->
   robot.respond /rss\s+delete\s+(https?:\/\/[^\s]+)$/im, (msg) ->
     url = msg.match[1].trim()
     logger.info "delete #{url}"
-    checker.deleteFeed getRoom(msg), url
+    checker.deleteFeed(getRoom(msg), url)
     .then (res) ->
       msg.send res
     .catch (err) ->
