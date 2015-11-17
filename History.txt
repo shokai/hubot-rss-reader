@@ -1,3 +1,10 @@
+=== 0.7.1 2015-11-18
+
+* added ENV var "HUBOT_RSS_LIMIT_ON_ADD"  #34
+  * limit printing entries when adding new feed
+  * default is 5
+  * disable limit if "false"
+
 === 0.7.0 2015-11-18
 
 * fix for coffee-script 1.6.x  #40
