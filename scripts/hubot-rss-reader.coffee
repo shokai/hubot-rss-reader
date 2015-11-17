@@ -29,6 +29,7 @@ process.env.HUBOT_RSS_PRINTSUMMARY ||= "true"
 process.env.HUBOT_RSS_PRINTIMAGE   ||= "true"
 process.env.HUBOT_RSS_PRINTERROR   ||= "true"
 process.env.HUBOT_RSS_IRCCOLORS    ||= "false"
+process.env.HUBOT_RSS_LIMIT_ON_ADD ||= 5
 
 module.exports = (robot) ->
 
@@ -116,7 +117,12 @@ module.exports = (robot) ->
     .then (url) ->
       checker.fetch {url: url, room: room}
     .then (entries) ->
-      for entry in entries.splice(0,5)
+      entry_limit =
+        if process.env.HUBOT_RSS_LIMIT_ON_ADD is 'false'
+          entries.length
+        else
+          process.env.HUBOT_RSS_LIMIT_ON_ADD - 0
+      for entry in entries.splice 0, entry_limit
         send {room: room}, entry.toString()
       if entries.length > 0
         send {room: room},
