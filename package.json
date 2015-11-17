@@ -38,12 +38,13 @@
   "devDependencies": {
     "coffee-errors": "*",
     "coffee-script": "^1.9",
-    "mocha": "*",
+    "coffeelint": "^1.13.1",
     "grunt": "*",
     "grunt-cli": "*",
-    "grunt-simple-mocha": "*",
-    "grunt-notify": "*",
     "grunt-coffeelint": "*",
-    "grunt-contrib-watch": "*"
+    "grunt-contrib-watch": "*",
+    "grunt-notify": "*",
+    "grunt-simple-mocha": "*",
+    "mocha": "*"
   }
 }
