@@ -63,7 +63,7 @@ module.exports = (robot) ->
     catch err
       logger.error "Error on sending to room: \"#{room}\""
       logger.error err
-  , 500
+  , 2000
 
   checker = new RSSChecker robot
 
