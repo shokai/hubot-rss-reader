@@ -80,7 +80,7 @@ module.exports = (robot) ->
         logger.info "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
         setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
 
-    run {init: yes}
+    run()
 
 
   last_state_is_error = {}

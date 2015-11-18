@@ -68,7 +68,6 @@ describe 'RSSChecker', ->
         assert.ok true, 'detect new entry'
 
       checker.check
-        init: yes
         feeds: [
           'http://shokai.org/blog/feed'
           'https://github.com/shokai.atom'

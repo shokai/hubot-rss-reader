@@ -51,7 +51,6 @@ module.exports = class RSSChecker extends events.EventEmitter
     new Promise (resolve, reject) =>
       default_args =
         url: null
-        init: no
         room: null
 
       if typeof args is 'string'
@@ -111,7 +110,7 @@ module.exports = class RSSChecker extends events.EventEmitter
       feedparser.on 'end', ->
         resolve entries
 
-  check: (opts = {init: no}) ->
+  check: (opts = {}) ->
     new Promise (resolve) =>
       debug "start checking all feeds"
       feeds = []
