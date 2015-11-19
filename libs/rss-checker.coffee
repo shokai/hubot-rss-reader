@@ -19,18 +19,11 @@ Promise    = require 'bluebird'
 IrcColor   = require 'irc-colors'
 
 charsetConvertStream = require './charset-convert-stream'
+Entries = require './entries'
 
 module.exports = class RSSChecker extends events.EventEmitter
-  constructor: (robot) ->
-    @robot = robot
-    @cache =
-      prefix: 'hubot-rss-reader:entry:'
-      set: (url) ->
-        robot.brain.set "#{@prefix}#{url}", true
-      unset: (url) ->
-        robot.brain.set "#{@prefix}#{url}", false
-      exists: (url) ->
-        robot.brain.get "#{@prefix}#{url}"
+  constructor: (@robot) ->
+    @entries = new Entries @robot
 
   cleanup_summary = (html = '') ->
     summary = do (html) ->
@@ -103,8 +96,8 @@ module.exports = class RSSChecker extends events.EventEmitter
 
         debug entry
         entries.push entry
-        unless @cache.exists entry.url
-          @cache.set entry.url
+        unless @entries.include entry.url
+          @entries.add entry.url
           @emit 'new entry', entry
 
       feedparser.on 'end', ->
