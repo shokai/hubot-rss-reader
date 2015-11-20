@@ -1,3 +1,7 @@
+=== 0.8.1 2015-11-20
+
+* fixed README
+
 === 0.8.0 2015-11-20
 
 * store entry URLs on brain  #31
