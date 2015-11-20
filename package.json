@@ -30,7 +30,6 @@
     "feedparser": "*",
     "find-rss": "*",
     "html-entities": "*",
-    "hubot-scripts": "*",
     "iconv": "*",
     "irc-colors": "^1.1.1",
     "lodash": "*",
@@ -46,6 +45,7 @@
     "grunt-contrib-watch": "*",
     "grunt-notify": "*",
     "grunt-simple-mocha": "*",
+    "hubot-scripts": "*",
     "mocha": "*"
   }
 }
