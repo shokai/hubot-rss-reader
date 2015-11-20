@@ -1,3 +1,8 @@
+=== 0.8.0 2015-11-20
+
+* store entry URLs on brain  #31
+* use only first xml encoding attributes  #41
+
 === 0.7.1 2015-11-18
 
 * added ENV var "HUBOT_RSS_LIMIT_ON_ADD"  #34
