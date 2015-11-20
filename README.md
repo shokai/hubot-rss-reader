@@ -14,7 +14,7 @@ Requirements
 
 - coffee-script 1.10+
 - hubot-brain
-  - recommend (hubot-mongodb-brain)[http://npmjs.com/package/hubot-mongodb-brain].
+  - recommend [hubot-mongodb-brain](http://npmjs.com/package/hubot-mongodb-brain).
 
 Install
 -------
