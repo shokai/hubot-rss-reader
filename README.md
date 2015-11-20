@@ -12,9 +12,9 @@ RSS Reader for each Chat Channels, works with Hubot.
 Requirements
 ------------
 
-- redis-brain
 - coffee-script 1.10+
-
+- hubot-brain
+  - recommend (hubot-mongodb-brain)[http://npmjs.com/package/hubot-mongodb-brain].
 
 Install
 -------
