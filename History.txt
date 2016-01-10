@@ -1,3 +1,7 @@
+=== 0.8.2 2016-01-10
+
+* load scripts via index.coffee to support hubot-help  #42
+
 === 0.8.1 2015-11-20
 
 * fixed README
