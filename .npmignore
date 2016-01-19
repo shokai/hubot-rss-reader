@@ -1,0 +1,11 @@
+*~
+*#*
+.DS_Store
+test/
+tmp/
+circle.yml
+*.log
+*.rdb
+.hubot_history
+hubot-scripts.json
+Gruntfile.coffee
