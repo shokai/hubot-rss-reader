@@ -89,7 +89,7 @@ module.exports = (robot) ->
     last_state_is_error[entry.feed.url] = false
     for room, feeds of checker.getAllFeeds()
       if room isnt entry.args.room and
-         _.include feeds, entry.feed.url
+         _.includes feeds, entry.feed.url
         logger.info "#{entry.title} #{entry.url} => #{room}"
         send {room: room}, entry.toString()
 
@@ -101,7 +101,7 @@ module.exports = (robot) ->
       return
     last_state_is_error[err.feed.url] = true
     for room, feeds of checker.getAllFeeds()
-      if _.include feeds, err.feed.url
+      if _.includes feeds, err.feed.url
         send {room: room}, "[ERROR] #{err.feed.url} - #{err.error.message or err.error}"
 
   robot.respond /rss\s+(add|register)\s+(https?:\/\/[^\s]+)$/im, (msg) ->
