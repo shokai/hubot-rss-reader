@@ -1,3 +1,8 @@
+=== 0.8.3 2016-01-19
+
+* support lodash v4.0  #43
+  * thank you for contributing @pastelInc
+
 === 0.8.2 2016-01-10
 
 * load scripts via index.coffee to support hubot-help  #42
