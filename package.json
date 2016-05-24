@@ -32,7 +32,7 @@
     "html-entities": "*",
     "iconv": "*",
     "irc-colors": "^1.1.1",
-    "lodash": "*",
+    "lodash": "3.8.0",
     "request": "*"
   },
   "devDependencies": {
