@@ -71,8 +71,8 @@ module.exports = (robot) ->
   robot.brain.once 'loaded', ->
     run = (opts) ->
       logger.info "checker start"
-      checker.check opts
-      .then ->
+      p = checker.check opts
+      p.then ->
         logger.info "wait #{process.env.HUBOT_RSS_INTERVAL} seconds"
         setTimeout run, 1000 * process.env.HUBOT_RSS_INTERVAL
       , (err) ->
